@@ -11,8 +11,6 @@ runs:
       uses: actions/github-script@v3
       with: 
         script: |
-          console.log(321);
-          
           const path = require('path');
 
           const packageInfoPath = path.join('${{ github.workspace }}', 'package.json');
