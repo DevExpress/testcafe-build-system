@@ -13,7 +13,7 @@ jobs:
       - id: detect
         uses: ./actions/detect-build-scripts
 
-      - uses: actions/github-script
+      - uses: actions/github-script@v6
         with:
           script: |
             const json = (${{ steps.detect.outputs.scripts }});
