@@ -9,4 +9,4 @@ runs:
     - uses: actions/github-script@v6
       with:
         script: |
-          console.log((${{ steps.detect_build_scripts.outputs }})[0])
+          console.log((${{ steps.detect_build_scripts.outputs.scripts }})[0])
