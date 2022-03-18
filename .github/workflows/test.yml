@@ -16,6 +16,6 @@ jobs:
       - uses: actions/github-script
         with:
           script: |
-          const json = (${{ steps.detect.outputs.scripts }});
+            const json = (${{ steps.detect.outputs.scripts }});
 
-          console.log(json[0])
+            console.log(json[0])
