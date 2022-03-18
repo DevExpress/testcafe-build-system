@@ -10,4 +10,5 @@ runs:
     - uses: actions/github-script@v3
       with: 
         script: |
+          console.log(process.cwd());
           core.setOutput("scripts", Object.keys(require('./package.json').scripts).filter(script => script.startsWith('build')))
