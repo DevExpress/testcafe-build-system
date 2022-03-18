@@ -2,6 +2,7 @@
     "name": "testcafe-build-system",
     "version": "0.0.1",
     "scripts": {
-        "build": "echo build"
+        "build": "echo build",
+        "build-docker": "echo docker"
     }
 }
