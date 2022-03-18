@@ -5,9 +5,9 @@ outputs:
     value: ""
 
 runs:
-  uses: "composite"
+  using: "composite"
   steps: 
-    - using: actions/github-script@v3
+    - uses: actions/github-script@v3
       with: 
         script: |
           core.setOutput("scripts", Object.keys(require('./package.json').scripts).filter(script => script.startsWith('build')))
