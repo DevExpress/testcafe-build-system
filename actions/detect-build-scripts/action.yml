@@ -2,12 +2,13 @@ name: "Detect build scripts"
 
 outputs:
   scripts:
-    value: ""
+    value: ${{ steps.detect_scripts.outputs.scripts }}
 
 runs:
   using: "composite"
   steps: 
-    - uses: actions/github-script@v3
+    - id: detect_scripts
+      uses: actions/github-script@v3
       with: 
         script: |
           const path = require('path');
