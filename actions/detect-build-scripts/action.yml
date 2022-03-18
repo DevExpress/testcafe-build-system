@@ -5,7 +5,7 @@ outputs:
     value: ""
 
 runs:
-  using: "composite"
+  uses: "composite"
   steps: 
     - using: actions/github-script@v3
       with: 
