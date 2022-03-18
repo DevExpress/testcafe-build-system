@@ -1,0 +1,12 @@
+name: Build package
+
+runs:
+  using: "composite"
+  steps:
+    - id: detect_build_scripts
+      uses: ./actions/detect-build-scripts
+
+    - uses: actions/github-script@v6
+      with:
+        script: |
+          console.log((${{ steps.detect_build_scripts.outputs.scripts }}).length)
