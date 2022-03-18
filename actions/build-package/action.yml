@@ -9,4 +9,4 @@ runs:
     - uses: actions/github-script@v6
       with:
         script: |
-          console.log((${{ toJSON(steps.detect_build_scripts.outputs) }}))
+          console.log("123", (${{ toJSON(steps.detect_build_scripts.outputs) }}))
