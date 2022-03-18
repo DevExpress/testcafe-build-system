@@ -13,4 +13,4 @@ jobs:
       - id: detect
         uses: ./actions/detect-build-scripts
       
-      - runs: "echo ${{ steps.detect.outputs.scripts }}"
+      - run: "echo ${{ steps.detect.outputs.scripts }}"
