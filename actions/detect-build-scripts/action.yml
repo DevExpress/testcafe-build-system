@@ -10,6 +10,8 @@ runs:
     - uses: actions/github-script@v3
       with: 
         script: |
+          const path = require('path');
+          
           const packageInfoPath = path.join(content.github.workspace, 'package.json');
 
           core.setOutput("scripts", Object.keys(require(packageInfoPath).scripts).filter(script => script.startsWith('build')))
