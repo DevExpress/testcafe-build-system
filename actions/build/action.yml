@@ -7,9 +7,7 @@ runs:
       uses: ./actions/detect-build-scripts
 
     - if: ${{ contains(fromJSON(steps.detect_build_scripts.outputs.scripts), 'build') }}
-      run: "echo build"
-      shell: bash
+      uses: ./actions/build-npm
     
     - if: ${{ contains(fromJSON(steps.detect_build_scripts.outputs.scripts), 'build-docker') }}
-      run: "echo docker"
-      shell: bash
+      uses: ./actions/build-docker

@@ -1,0 +1,14 @@
+name: Build Docker image
+
+runs:
+  using:
+  steps:
+    - shell: bash
+      run: |
+        npx gulp docker-build
+        docker save -o ${{steps.package-name.outputs.packageName}}.tar ${{steps.package-name.outputs.imageName}} 
+        
+    - uses: actions/upload-artifact@v2
+      with:
+        name: docker
+        path: ${{steps.package-name.outputs.packageName}}.tar

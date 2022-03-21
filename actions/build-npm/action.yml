@@ -1,0 +1,26 @@
+name: Build NPM package
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        npm i --legacy-peer-deps
+        npm run build
+        npm pack
+
+    - id: package-name
+      uses: actions/github-script@v3
+      with:
+        script: |
+          const { name, version } = require(require('path').join(process.env.GITHUB_WORKSPACE, 'package.json'));
+          
+          core.setOutput('packageName', `${name}-${version}`);
+          core.setOutput('imageName', `${name}/${name}:${version}`);
+          
+    - uses: actions/upload-artifact@v2
+      with:
+        name: npm
+        path: |
+          ${{steps.package-name.outputs.packageName}}.tgz
+          package-lock.json
