@@ -3,16 +3,11 @@ name: Build package
 runs:
   using: "composite"
   steps:   
-    - id: gh
-      uses: actions/github-script@v6
-      with:
-        script: core.setOutput('rep', ${{ github.action_repository }}); core.setOutput('ref', ${{ github.action_ref }})
-
     - id: detect_build_scripts
-      uses: "${{ format('{0}/actions/detect-build-scripts@{1}', steps.gh.outputs.rep, steps.gh.outputs.ref) }}"
+      uses: DevExpress/testcafe-build-system/actions/detect-build-scripts@main
 
     - if: ${{ contains(fromJSON(steps.detect_build_scripts.outputs.scripts), 'build') }}
-      uses: ./actions/build-npm
+      uses: DevExpress/testcafe-build-system/actions/build-npm@main
     
     - if: ${{ contains(fromJSON(steps.detect_build_scripts.outputs.scripts), 'build-docker') }}
-      uses: ./actions/build-docker
+      uses: DevExpress/testcafe-build-system/actions/build-docker@main
