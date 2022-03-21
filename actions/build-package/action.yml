@@ -6,5 +6,6 @@ runs:
     - id: detect_build_scripts
       uses: ./actions/detect-build-scripts
 
-    - run: "echo ${{ steps.detect_build_scripts.outputs.scripts[0] }}"
+    - if: contains(steps.detect_build_scripts.outputs.scripts, "build")
+      run: "echo ok"
       shell: bash
