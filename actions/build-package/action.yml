@@ -1,5 +1,7 @@
 name: Build package
 
+outputs:
+  scripts: ${{ }}
 runs:
   using: "composite"
   steps:
@@ -7,5 +9,8 @@ runs:
       uses: ./actions/detect-build-scripts
 
     - if: ${{ contains(fromJSON(steps.detect_build_scripts.outputs.scripts), 'build') }}
-      run: "echo ok"
+      run: "echo build"
       shell: bash
+    
+    - if: ${{ contains(fromJSON(steps.detect_build_scripts.outputs.scripts), 'build-docker') }}
+      run: "echo docker"
