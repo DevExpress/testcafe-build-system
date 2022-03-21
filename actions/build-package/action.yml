@@ -1,7 +1,5 @@
 name: Build package
 
-outputs:
-  scripts: ${{ }}
 runs:
   using: "composite"
   steps:
