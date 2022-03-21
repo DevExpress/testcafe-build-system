@@ -4,7 +4,7 @@ runs:
   using: "composite"
   steps:
     - id: detect_build_scripts
-      uses: ./actions/detect-build-scripts
+      uses: ${{ github.action_repository }}/actions/detect-build-scripts@${{ github.action_ref }}
 
     - if: ${{ contains(fromJSON(steps.detect_build_scripts.outputs.scripts), 'build') }}
       uses: ./actions/build-npm
