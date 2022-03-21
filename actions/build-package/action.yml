@@ -7,3 +7,4 @@ runs:
       uses: ./actions/detect-build-scripts
 
     - run: "echo ${{ steps.detect_build_scripts.outputs.scripts[0] }}"
+      shell: bash
