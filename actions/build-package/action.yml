@@ -14,3 +14,4 @@ runs:
     
     - if: ${{ contains(fromJSON(steps.detect_build_scripts.outputs.scripts), 'build-docker') }}
       run: "echo docker"
+      shell: bash
