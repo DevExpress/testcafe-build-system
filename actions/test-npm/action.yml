@@ -12,9 +12,7 @@ runs:
         name: npm
 
     - shell: bash
-      run: |
-        unzip npm
-        tar --strip-components=1 -xzf *.tgz
+      run: tar --strip-components=1 -xzf *.tgz
         
     - shell: bash
       id: npm-cache-dir
