@@ -1,0 +1,37 @@
+name: Test NPM
+
+inputs:
+  task:
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/download-artifact@v3
+      with:
+        name: package.zip
+
+    - shell: bash
+      run: |
+        unzip package.zip
+        tar --strip-components=1 -xzf *.tgz
+        
+    - shell: bash
+      id: npm-cache-dir
+      run: |
+        echo "::set-output name=dir::$(npm config get cache)"
+
+    - uses: actions/cache@v2
+      id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+      with:
+        path: ${{ steps.npm-cache-dir.outputs.dir }}
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - shell: bash
+      run: npm ci
+
+    - shell: bash
+      run: npx gulp ${{ inputs.task }} --steps-as-tasks
+      timeout-minutes: 60
