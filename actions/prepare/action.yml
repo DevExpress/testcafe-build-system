@@ -3,6 +3,10 @@ name: Prepare
 runs:
   using: composite
   steps:
+    - uses: actions/github-script@v6
+      with:
+        script: |
+          console.log(${{ github.event }})
     - if: ${{ github.event.pull_request }}
       uses: actions/checkout@v3
       with:
