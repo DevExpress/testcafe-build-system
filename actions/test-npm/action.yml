@@ -9,11 +9,11 @@ runs:
   steps:
     - uses: actions/download-artifact@v3
       with:
-        name: package.zip
+        name: npm
 
     - shell: bash
       run: |
-        unzip package.zip
+        unzip npm
         tar --strip-components=1 -xzf *.tgz
         
     - shell: bash
