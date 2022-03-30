@@ -8,7 +8,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      
-      - id: detect
-        uses: ./actions/build
+      - uses: DevExpress/testcafe-build-system/actions/release-lock@main
+        with:
+          lock: ${{ secrets.RELEASE_LOCK }}

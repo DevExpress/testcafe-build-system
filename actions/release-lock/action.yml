@@ -1,0 +1,14 @@
+name: Release lock
+
+inputs:
+  lock:
+    description: Determines if this action should fail and lock CI to prevent accidental merges
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/github-script@v6
+      if: ${{ inputs.lock }}
+      with:
+        script: core.setFailed('A new release is coming. No new code can be merged in the main branch.')
