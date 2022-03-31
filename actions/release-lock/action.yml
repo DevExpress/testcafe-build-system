@@ -8,7 +8,10 @@ inputs:
 runs:
   using: composite
   steps:
+    - id: detect-pr-type
+      uses: DevExpress/testcafe-build-system/actions/detect-pr-type@main
+
     - uses: actions/github-script@v6
-      if: ${{ inputs.lock }}
+      if: ${{ steps.detect-pr-type.outputs.type != 'release' && inputs.lock }}
       with:
         script: core.setFailed('A new release is coming. No new code can be merged in the main branch.')
