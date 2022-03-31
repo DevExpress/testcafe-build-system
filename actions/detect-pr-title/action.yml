@@ -2,13 +2,16 @@ name: Detect PR title
 
 outputs: 
   type:
-    value: ${{ steps.detect-type.type }}
+    title: ${{ steps.detect-title.outputs.type }}
 
 runs:
   using: composite
   steps:
-    - uses: actions/github-script@v6
+    - id: detect-title
+      uses: actions/github-script@v6
       if: ${{ github.event.pull_request }}
       with:
         script: |
-          console.log(require(process.env.GITHUB_EVENT_PATH))
+          const event = require(process.env.GITHUB_EVENT_PATH);
+
+          core.setOutput('title', event.pull_request.title);

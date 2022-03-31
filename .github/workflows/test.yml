@@ -9,4 +9,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: DevExpress/testcafe-build-system/actions/detect-pr-title@main
+      - id: detect-type
+        uses: DevExpress/testcafe-build-system/actions/detect-pr-type@main
+      - shell: bash
+        env:
+          TBS_PR_TYPE: ${{ steps.detect-type.outputs.type }}
+        run: echo "$TBS_PR_TYPE"
+        
