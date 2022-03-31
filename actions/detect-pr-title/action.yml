@@ -14,4 +14,10 @@ runs:
         script: |
           const event = require(process.env.GITHUB_EVENT_PATH);
           
-          core.setOutput('title', event.pull_request.title);
+          const repo   = event.repository.name;
+          const owner  = event.repository.owner.login;
+          const number = event.pull_request.number;
+
+          const pullRequest = await github.pulls.get({ owner, repo, pull_number: number });
+
+          core.setOutput('title', pullRequest.title);
