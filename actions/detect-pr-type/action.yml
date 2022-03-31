@@ -10,12 +10,12 @@ runs:
     - id: detect-title
       uses: DevExpress/testcafe-build-system/actions/detect-pr-title@main
 
-    - shell: bash
-      run: echo "${{ toJSON(steps) }}"
     - uses: actions/github-script@v6
       if: ${{ github.event.pull_request }}
       env:
         TBS_PR_TITLE: ${{ steps.detect-title.outputs.title }}
       with:
         script: |
-          core.setOutput('type', process.env.TBS_PR_TITLE.match(/(\S*):/)?.at(1))
+          console.log(process.env.TBS_PR_TITLE.match(/^\s*(\S*):/), process.env.TBS_PR_TITLE.match(/^\s*(\S*):/)?.at(1));
+          
+          core.setOutput('type', process.env.TBS_PR_TITLE.match(/^\s*(\S*):/)?.at(1))
