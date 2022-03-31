@@ -20,4 +20,6 @@ runs:
 
           const pullRequest = await github.rest.pulls.get({ owner, repo, pull_number: number });
 
+          console.log(pullRequest);
+          
           core.setOutput('title', pullRequest.title);
