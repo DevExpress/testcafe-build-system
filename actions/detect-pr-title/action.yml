@@ -11,4 +11,4 @@ runs:
       if: ${{ github.event.pull_request }}
       with:
         script: |
-          console.log(process.env)
+          console.log(require(process.env.GITHUB_EVENT_PATH))
