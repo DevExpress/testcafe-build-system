@@ -2,7 +2,7 @@ name: Detect PR title
 
 outputs: 
   title:
-    value: ${{ steps.detect-title.outputs.type }}
+    value: ${{ steps.detect-title.outputs.title }}
 
 runs:
   using: composite
