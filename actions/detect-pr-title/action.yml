@@ -14,4 +14,6 @@ runs:
         script: |
           const event = require(process.env.GITHUB_EVENT_PATH);
 
+          console.log(event.pull_request.title);
+          
           core.setOutput('title', event.pull_request.title);

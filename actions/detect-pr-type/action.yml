@@ -10,6 +10,8 @@ runs:
     - id: detect-title
       uses: DevExpress/testcafe-build-system/actions/detect-pr-title@main
 
+    - shell: bash
+      run: echo ${{ toJSON(steps) }}
     - uses: actions/github-script@v6
       if: ${{ github.event.pull_request }}
       env:
