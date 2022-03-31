@@ -10,9 +10,7 @@ jobs:
 
     steps:
       - id: detect-type
-        uses: DevExpress/testcafe-build-system/actions/detect-pr-type@main
-      - shell: bash
-        env:
-          TBS_PR_TYPE: ${{ steps.detect-type.outputs.type }}
-        run: echo "$TBS_PR_TYPE"
+        uses: DevExpress/testcafe-build-system/actions/release-lock@main
+        with: 
+          lock: ${{ secrets.RELEASE_LOCK }}
         
