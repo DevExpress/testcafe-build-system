@@ -1,0 +1,14 @@
+name: Detect PR type
+
+outputs: 
+  type:
+    value: ${{ steps.detect-type.type }}
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/github-script@v6
+      if: ${{ github.event.pull_request }}
+      with:
+        script: |
+          console.log(process.env)

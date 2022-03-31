@@ -2,12 +2,11 @@ name: Test
 
 on: 
   workflow_dispatch:
+  pull_request_target:
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: DevExpress/testcafe-build-system/actions/release-lock@main
-        with:
-          lock: ${{ secrets.RELEASE_LOCK }}
+      - uses: DevExpress/testcafe-build-system/actions/detect-pr-title@main
