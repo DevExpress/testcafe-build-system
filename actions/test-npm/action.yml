@@ -2,7 +2,7 @@ name: Test NPM
 
 inputs:
   task:
-    required: true
+    default:
 
 runs:
   using: composite
