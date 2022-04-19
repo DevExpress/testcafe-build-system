@@ -16,8 +16,8 @@ runs:
       
     - uses: actions/github-script@v6
       with:
-        script: console.log((${{inputs.token}}).slice(0,6))
-        
+        script: console.log(("${{inputs.token}}").slice(0,6))
+
     - shell: bash
       run: npx publish-please
       env:
