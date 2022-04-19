@@ -18,4 +18,7 @@ runs:
       run: npm config set "//${{ inputs.registry }}/:_authToken" "${{ inputs.token || env.NPM_TOKEN || env.NODE_AUTH_TOKEN }} "
 
     - shell: bash
+      run: git status && git diff
+
+    - shell: bash
       run: npx publish-please
