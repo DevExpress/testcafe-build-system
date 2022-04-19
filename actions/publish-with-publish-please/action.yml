@@ -12,3 +12,5 @@ runs:
       
     - shell: bash
       run: npx publish-please
+      env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
