@@ -12,7 +12,7 @@ runs:
     - uses: DevExpress/testcafe-build-system/actions/build@main
     
     - shell: bash
-      run: npm install && git status
+      run: npm install && git status && git diff
       
     - shell: bash
       run: npx publish-please
