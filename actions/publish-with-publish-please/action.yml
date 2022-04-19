@@ -17,8 +17,9 @@ runs:
     - shell: bash
       run: npm config set "//${{ inputs.registry }}/:_authToken" "${{ inputs.token || env.NPM_TOKEN || env.NODE_AUTH_TOKEN }} "
 
+    # TODO: do something with "npm install" changing package-lock.json
     - shell: bash
-      run: git status && git diff
+      run: git checkout -- package-lock.json
 
     - shell: bash
       run: npx publish-please
