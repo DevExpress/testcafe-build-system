@@ -8,7 +8,7 @@ runs:
     - uses: DevExpress/testcafe-build-system/actions/build@main
     
     - shell: bash
-      run: npm install
+      run: npm install && git status
       
     - shell: bash
       run: npx publish-please
