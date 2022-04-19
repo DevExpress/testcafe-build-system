@@ -1,0 +1,12 @@
+name: Publish with publish-please
+
+runs:
+  using: composite
+  steps:
+    - uses: DevExpress/testcafe-build-system/actions/prepare@main
+
+    - shell: bash
+      run: npm install
+      
+    - shell: bash
+      run: npx publish-please
