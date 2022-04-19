@@ -31,4 +31,4 @@ runs:
       run: npm ci
 
     - shell: bash
-      run: npx gulp ${{ inputs.task }} --steps-as-tasks
+      run: npm run ${{ inputs.task }}
