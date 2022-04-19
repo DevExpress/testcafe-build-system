@@ -15,7 +15,7 @@ runs:
       run: npm install && git status && git diff
 
     - shell: bash
-      run: npx publish-please
+      run: npm run publish-please
       env:
           NODE_AUTH_TOKEN: ${{ inputs.token || env.NPM_TOKEN || env.NODE_AUTH_TOKEN }}
           NPM_TOKEN: ${{ inputs.token || env.NPM_TOKEN || env.NODE_AUTH_TOKEN }}
