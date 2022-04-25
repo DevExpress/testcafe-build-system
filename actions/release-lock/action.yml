@@ -11,9 +11,6 @@ runs:
     - id: detect-pr-type
       uses: DevExpress/testcafe-build-system/actions/detect-pr-type@main
 
-    - shell: bash
-      run: echo ${{ steps.detect-pr-type.outputs.type }} ${{ github.event.pull_request.title }}
-
     - uses: actions/github-script@v6
       if: ${{ steps.detect-pr-type.outputs.type != 'release' && inputs.lock }}
       with:
