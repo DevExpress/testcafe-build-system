@@ -36,6 +36,4 @@ runs:
             return { path: w, name: workspaceInfo.name, version: workspaceInfo.version }; 
           }));
 
-          console.log(workspacesData);
-          
           core.setOutput('workspaces', workspacesData);
