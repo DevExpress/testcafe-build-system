@@ -1,0 +1,18 @@
+name: Fix Owner of NPM Package
+
+inputs:
+  package:
+    required: false
+  owner:
+    required: false
+    default: kirovboris
+
+runs:
+  using: composite
+  steps:
+    - id: detect-package-name
+      if: ${{ !inputs.package }}
+      uses: DevExpress/testcafe-build-system/actions/detect-package-metadata@main
+
+    - shell: bash
+      run: npm access grant read-write "${{ inputs.package || steps.detect-package-name.outputs.name }}" "${{ inputs.owner }}"

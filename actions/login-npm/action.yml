@@ -1,0 +1,19 @@
+name: Log In NPM
+
+inputs:
+  registry:
+    required: false
+    default: 'registry.npmjs.org'
+protocol:
+    required: false
+    default: 'https'
+  token:
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        npm config set registry "${{ inputs.protocol }}://${{ inputs.registry }}"
+        npm config set "//${{ inputs.registry }}/:_authToken" "${{ inputs.token || env.NPM_TOKEN || env.NODE_AUTH_TOKEN }} "

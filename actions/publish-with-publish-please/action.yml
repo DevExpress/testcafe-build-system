@@ -3,8 +3,11 @@ name: Publish with publish-please
 inputs:
   registry:
     required: false
-    default: 'registry.npmjs.org'
+  protocol:
+    required: false
   token:
+    required: false
+  owner:
     required: false
     
 runs:
@@ -14,8 +17,11 @@ runs:
 
     - uses: DevExpress/testcafe-build-system/actions/build@main
 
-    - shell: bash
-      run: npm config set "//${{ inputs.registry }}/:_authToken" "${{ inputs.token || env.NPM_TOKEN || env.NODE_AUTH_TOKEN }} "
+    - uses: DevExpress/testcafe-build-system/actions/login-npm@main
+      with:
+        registry: ${{ inputs.registry }}
+        protocol: ${{ inputs.protocol }}
+        token: ${{ inputs.token }}
 
     # TODO: do something with "npm install" changing package-lock.json
     - shell: bash
@@ -23,3 +29,7 @@ runs:
 
     - shell: bash
       run: npx publish-please
+
+    - uses: DevExpress/testcafe-build-system/actions/fix-package-access-npm@main
+      with:
+        owner: ${{ inputs.owner }}

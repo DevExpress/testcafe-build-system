@@ -6,21 +6,13 @@ runs:
     - shell: bash
       run: |
         npm i --legacy-peer-deps
-        npm run build
-        npm pack
-
-    - id: package-name
-      uses: actions/github-script@v3
-      with:
-        script: |
-          const { name, version } = require(require('path').join(process.env.GITHUB_WORKSPACE, 'package.json'));
+        npm run lint --if-present
+        npm run build --if-present
+        npm pack --pack-destination .builds
           
-          core.setOutput('packageName', `${name}-${version}`);
-          core.setOutput('imageName', `${name}/${name}:${version}`);
-          
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: npm
         path: |
-          ${{steps.package-name.outputs.packageName}}.tgz
+          .builds/*.tgz
           package-lock.json

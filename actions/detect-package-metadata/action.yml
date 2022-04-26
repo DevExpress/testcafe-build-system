@@ -1,0 +1,29 @@
+name: "Detect build scripts"
+
+outputs:
+  name:
+    value: ${{ steps.detect_scripts.outputs.name }}
+  version:
+    value: ${{ steps.detect_scripts.outputs.version }}
+  scripts:
+    value: ${{ steps.detect_scripts.outputs.scripts }}
+
+runs:
+  using: "composite"
+  steps: 
+    - id: detect_scripts
+      uses: actions/github-script@v3
+      with: 
+        script: |
+          const path = require('path');
+
+          const packageInfoPath = path.join('${{ github.workspace }}', 'package.json');
+          const packageInfo     = require(packageInfoPath);
+
+          core.setOutput('name', packageInfo.name);
+          core.setOutput('version', packageInfo.version);
+          core.setOutput('scripts', Object.keys(packageInfo.scripts).filter(script => script.startsWith('build')))
+
+          const workspaces = packageInfo.workspaces || [];
+
+          core.setOutput('workspaces', workspaces.map(w => ({ path: w, name: require(path.join('${{ github.workspace }}', w)).name })));

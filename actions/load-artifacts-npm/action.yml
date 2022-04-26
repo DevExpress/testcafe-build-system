@@ -1,0 +1,21 @@
+name: Load Artifacts from NPM
+
+runs:
+  using: composite
+  steps:
+    - id: detect-package-metadata
+      if: ${{ !inputs.package }}
+      uses: DevExpress/testcafe-build-system/actions/detect-package-metadata@main
+    
+    - uses: actions/download-artifact@v3
+      with:
+        name: npm
+
+    - shell: bash
+      run: tar --strip-components=1 -xzf '${{ format('{0}-{1}.tgz', steps.detect-package-metadata.name, steps.detect-package-metadata.version) }}'
+
+    - uses: actions/github-script@v6
+      with:
+        script: |
+          const workspaces = (${{ (steps.detect-package-metadata.workspaces) }});
+

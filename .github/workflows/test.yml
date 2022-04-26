@@ -9,8 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - id: detect-type
-        uses: DevExpress/testcafe-build-system/actions/release-lock@main
-        with: 
-          lock: ${{ secrets.RELEASE_LOCK }}
-        
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            console.log(process.env);
