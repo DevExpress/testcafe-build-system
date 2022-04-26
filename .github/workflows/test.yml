@@ -9,5 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - shell: bash
-        run: cat $GITHUB_STEP_SUMMARY
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            console.log(require('fs').readFileSync(process.env.GITHUB_STEP_SUMMARY));
