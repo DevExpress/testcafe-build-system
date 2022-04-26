@@ -11,7 +11,7 @@ runs:
         name: npm
 
     - shell: bash
-      run: tar --strip-components=1 -xzf '${{ format('.builds/{0}-{1}.tgz', steps.detect-package-metadata.name, steps.detect-package-metadata.version) }}'
+      run: tar --strip-components=1 -xzf '${{ format('.builds/{0}-{1}.tgz', steps.detect-package-metadata.outputs.name, steps.detect-package-metadata.outputs.version) }}'
 
     - uses: actions/github-script@v6
       with:
