@@ -4,11 +4,19 @@ runs:
   using: composite
   steps:
     - shell: bash
+      run: npm i --legacy-peer-deps
+    
+    - shell: bash
+      run: npm run lint --if-present
+    
+    - shell: bash
+      run: npm run build --if-present
+    
+    - shell: bash
       run: |
-        npm i --legacy-peer-deps
-        npm run lint --if-present
-        npm run build --if-present
+        mkdir .builds
         npm pack --pack-destination .builds
+        npm pack -ws --pack-destination .builds || echo No workspaces
           
     - uses: actions/upload-artifact@v3
       with:
