@@ -4,7 +4,6 @@ runs:
   using: composite
   steps:
     - id: detect-package-metadata
-      if: ${{ !inputs.package }}
       uses: DevExpress/testcafe-build-system/actions/detect-package-metadata@main
     
     - uses: actions/download-artifact@v3
@@ -12,10 +11,13 @@ runs:
         name: npm
 
     - shell: bash
-      run: tar --strip-components=1 -xzf '${{ format('{0}-{1}.tgz', steps.detect-package-metadata.name, steps.detect-package-metadata.version) }}'
+      run: tar --strip-components=1 -xzf '${{ format('.builds/{0}-{1}.tgz', steps.detect-package-metadata.name, steps.detect-package-metadata.version) }}'
 
     - uses: actions/github-script@v6
       with:
         script: |
-          const workspaces = (${{ (steps.detect-package-metadata.workspaces) }});
+          const workspaces = JSON.parse(${{ toJSON(steps.detect-package-metadata.workspaces) }});
+
+          for (const workspace of workspaces)
+            await exec(`tar -C ${workspace.path} -xzf .builds/${workspace.name}-${workspace.version}.tgz`)
 

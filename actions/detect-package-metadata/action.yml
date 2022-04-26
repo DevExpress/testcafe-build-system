@@ -17,7 +17,11 @@ runs:
         script: |
           const path = require('path');
 
-          const packageInfoPath = path.join('${{ github.workspace }}', 'package.json');
+          function joinPath (...args) {
+            return path.join('${{ github.workspace }}', ...args);
+          }
+
+          const packageInfoPath = joinPath('package.json');
           const packageInfo     = require(packageInfoPath);
 
           core.setOutput('name', packageInfo.name);
@@ -26,4 +30,8 @@ runs:
 
           const workspaces = packageInfo.workspaces || [];
 
-          core.setOutput('workspaces', workspaces.map(w => ({ path: w, name: require(path.join('${{ github.workspace }}', w)).name })));
+          core.setOutput('workspaces', workspaces.map(w => { 
+            const workspaceInfo = require(joinPath(w, 'package.json'));
+
+            return { path: w, name: workspaceInfo.name, version: workspaceInfo.version }; 
+          }));

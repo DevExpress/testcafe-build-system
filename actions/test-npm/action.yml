@@ -7,12 +7,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/download-artifact@v3
-      with:
-        name: npm
-
-    - shell: bash
-      run: tar --strip-components=1 -xzf *.tgz
+    - uses: DevExpress/testcafe-build-system/actions/load-artifacts-npm@main
         
     - shell: bash
       id: npm-cache-dir
