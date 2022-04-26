@@ -16,7 +16,7 @@ runs:
     - uses: actions/github-script@v6
       with:
         script: |
-          const workspaces = JSON.parse(${{ toJSON(steps.detect-package-metadata.workspaces) }});
+          const workspaces = JSON.parse(${{ toJSON(steps.detect-package-metadata.outputs.workspaces) }});
 
           for (const workspace of workspaces)
             await exec(`tar -C ${workspace.path} -xzf .builds/${workspace.name}-${workspace.version}.tgz`)
