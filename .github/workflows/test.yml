@@ -9,7 +9,5 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/github-script@v6
-        with:
-          script: |
-            console.log(process.env);
+      - shell: bash
+        run: cat $GITHUB_STEP_SUMMARY
