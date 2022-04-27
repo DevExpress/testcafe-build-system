@@ -12,8 +12,9 @@ inputs:
 
 runs:
   using: composite
+  env: 
   steps:
     - shell: bash
       run: |
-        npm config set registry "${{ inputs.protocol }}://${{ inputs.registry }}/"
-        npm config set "//${{ inputs.registry }}/:_authToken" "${{ inputs.token || env.NPM_TOKEN || env.NODE_AUTH_TOKEN }}"
+        npm config set registry "${{ inputs.protocol || 'https' }}://${{ inputs.registry || 'registry.npmjs.org' }}/"
+        npm config set "//${{ inputs.registry || 'registry.npmjs.org' }}/:_authToken" "${{ inputs.token || env.NPM_TOKEN || env.NODE_AUTH_TOKEN }}"
