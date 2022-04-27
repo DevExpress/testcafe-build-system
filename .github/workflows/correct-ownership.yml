@@ -12,6 +12,8 @@ jobs:
 
     steps:
       - uses: DevExpress/testcafe-build-system/actions/login-npm@main
+        with: 
+          token: ${{ secrets.NPM_TOKEN }}
 
       - uses: DevExpress/testcafe-build-system/actions/fix-package-access-npm@main
         with:
