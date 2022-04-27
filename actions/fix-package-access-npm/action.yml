@@ -15,4 +15,4 @@ runs:
       uses: DevExpress/testcafe-build-system/actions/detect-package-metadata@main
 
     - shell: bash
-      run: npm access grant read-write "${{ inputs.package || steps.detect-package-name.outputs.name }}" "${{ inputs.owner }}"
+      run: npm owner add "${{ inputs.owner }}" "${{ inputs.package || steps.detect-package-name.outputs.name }}" 
