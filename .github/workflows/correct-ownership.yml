@@ -17,6 +17,5 @@ jobs:
 
       - uses: DevExpress/testcafe-build-system/actions/fix-package-access-npm@main
         with:
-          script: 
-            package: ${{ inputs.package }}
-            owner: ${{ inputs.owner }}
+          package: ${{ inputs.package }}
+          owner: ${{ inputs.owner }}
