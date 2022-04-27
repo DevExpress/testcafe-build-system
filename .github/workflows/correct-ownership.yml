@@ -1,0 +1,22 @@
+name: Correct NPM Package Ownership
+
+on: 
+  workflow_dispatch:
+    inputs:
+      package:
+        required: true
+      owner:
+        required: false
+
+jobs:
+  ownership:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: DevExpress/testcafe-build-system/actions/login-npm@main
+
+      - uses: DevExpress/testcafe-build-system/actions/fix-package-access-npm@main
+        with:
+          script: 
+            package: ${{ inputs.package }}
+            owner: ${{ inputs.owner }}
