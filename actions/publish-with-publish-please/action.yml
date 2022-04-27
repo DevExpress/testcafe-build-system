@@ -29,7 +29,3 @@ runs:
 
     - shell: bash
       run: npx publish-please
-
-    - uses: DevExpress/testcafe-build-system/actions/fix-package-access-npm@main
-      with:
-        owner: ${{ inputs.owner }}
