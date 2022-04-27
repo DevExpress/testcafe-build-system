@@ -5,8 +5,6 @@ on:
     inputs:
       package:
         required: true
-      owner:
-        required: false
 
 jobs:
   ownership:
@@ -18,4 +16,3 @@ jobs:
       - uses: DevExpress/testcafe-build-system/actions/fix-package-access-npm@main
         with:
           package: ${{ github.event.inputs.package }}
-          owner: ${{ github.event.inputs.owner }}
