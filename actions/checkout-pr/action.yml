@@ -1,0 +1,63 @@
+name: Checkout PR
+
+runs:
+  using: composite
+  steps:
+    - id: detect-commit
+      uses: actions/github-script@v6
+      if: ${{ github.event.pull_request }}
+      with:
+        script: |
+          const MAX_TIME = 2 * 60 * 1000;
+
+          const event = require(process.env.GITHUB_EVENT_PATH);
+          
+          const repo   = event.repository.name;
+          const owner  = event.repository.owner.login;
+          const number = event.pull_request.number;
+
+          // TODO: Deduplicate with the checkout-pr action
+          async function fetchPR (repo, owner, number) {
+              const { data: pullRequest } = await github.rest.pulls.get({ owner, repo, pull_number: number });
+
+              const mergePending = pullRequest.mergeable === null || pullRequest.mergeable !== false && !pullRequest.merge_commit_sha;
+
+              return {
+                  title:          pullRequest.title,
+                  mergeCommitSha: pullRequest.merge_commit_sha,
+                  mergeable:      pullRequest.mergeable,
+                  mergePending:   mergePending
+              };              
+          }
+
+          
+          let startTime = Date.now();
+
+          do {
+            const { mergeable, mergePending, mergeCommitSha } = await fetchPR(repo, owner, number);
+
+            if (mergeable && !mergePending && mergeCommitSha)
+              break;
+
+            if (mergePending) {
+                await new Promise(r => setTimeout(r, 5000));
+                continue;
+            }
+
+            if (mergeable === false)
+                throw new Error('The PR cannot be synchronized with the base branch. Try to rebase the PR on top of the base branch.')
+          
+            if (!mergeCommitSha)
+                throw new Error('Cannot retrieve the merge commit between the PR and the base branch.');
+          } 
+          while (startTime + MAX_TIME <= Date.now());
+
+          const { mergeCommitSha } = await fetchPR(repo, owner, number);
+
+          core.setOutput('sha', mergeCommitSha);
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ steps.detect-commit.outputs.sha }}
+          
+          
+          

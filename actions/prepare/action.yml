@@ -4,9 +4,7 @@ runs:
   using: composite
   steps:
     - if: ${{ github.event.pull_request }}
-      uses: actions/checkout@v3
-      with:
-        ref: ${{ github.event.pull_request.merge_commit_sha }}
+      uses: DevExpress/testcafe-build-system/actions/checkout-pr@main
     
     - if: ${{ !github.event.pull_request }}
       uses: actions/checkout@v3

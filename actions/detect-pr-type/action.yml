@@ -8,7 +8,7 @@ runs:
   using: composite
   steps:
     - id: detect-title
-      uses: DevExpress/testcafe-build-system/actions/detect-pr-title@main
+      uses: DevExpress/testcafe-build-system/actions/detect-pr-metadata@main
 
     - id: detect-type
       uses: actions/github-script@v6

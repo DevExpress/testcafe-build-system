@@ -1,0 +1,35 @@
+name: Detect PR metadata
+
+outputs: 
+  title:
+    value: ${{ steps.detect-metadata.outputs.title }}
+  merge_commit_sha:
+    value: ${{ steps.detect-metadata.outputs.merge_commit_sha }}
+  mergeable:
+    value: ${{ steps.detect-metadata.outputs.mergeable }}
+  merge_pending:
+    value: ${{ steps.detect-metadata.outputs.merge_pending }}
+
+runs:
+  using: composite
+  steps:
+    - id: detect-metadata
+      uses: actions/github-script@v6
+      if: ${{ github.event.pull_request }}
+      with:
+        script: |
+          const event = require(process.env.GITHUB_EVENT_PATH);
+          
+          const repo   = event.repository.name;
+          const owner  = event.repository.owner.login;
+          const number = event.pull_request.number;
+
+          // TODO: Deduplicate with the checkout-pr action
+          const { data: pullRequest } = await github.rest.pulls.get({ owner, repo, pull_number: number });
+
+          const mergePending = pullRequest.mergeable === null || pullRequest.mergeable !== false && !pullRequest.merge_commit_sha;
+          
+          core.setOutput('title', pullRequest.title);
+          core.setOutput('merge_commit_sha', pullRequest.merge_commit_sha);
+          core.setOutput('mergeable', pullRequest.mergeable);
+          core.setOutput('merge_pending', mergePending);
