@@ -4,3 +4,5 @@ group:
   files:
     - source: workflows/
       dest: .github/workflows/
+    - source: configs/labels.yml
+      dest: .github/labels.yml
