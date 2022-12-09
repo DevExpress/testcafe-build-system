@@ -1,0 +1,6 @@
+group:
+  repos: |
+    DevExpress/testcafe-safe-storage
+  files:
+    - source: workflows/
+      dest: .github/workflows/
