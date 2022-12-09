@@ -16,3 +16,13 @@ jobs:
           GH_PAT: ${{ secrets.PERSONAL_TOKEN }}
           CONFIG_PATH: configs/sync-workflows.yml
           SKIP_PR: true
+          COMMIT_PREFIX: ""
+      - if: ${{ failure() }}
+        run: sleep 60
+      - if: ${{ failure() }}
+        name: Run GitHub File Sync (PR)
+        uses: BetaHuhn/repo-file-sync-action@v1
+        with:
+          GH_PAT: ${{ secrets.PERSONAL_TOKEN }}
+          CONFIG_PATH: configs/sync-workflows.yml
+          COMMIT_PREFIX: ""
