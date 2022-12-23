@@ -15,12 +15,14 @@ runs:
   steps: 
     - id: detect_scripts
       uses: actions/github-script@v3
+      env: 
+        WORKSPACE: ${{ github.workspace }}
       with: 
         script: |
           const path = require('path');
 
           function joinPath (...args) {
-            return path.join('${{ github.workspace }}', ...args);
+            return path.join(process.env.WORKSPACE, ...args);
           }
 
           const packageInfoPath = joinPath('package.json');
