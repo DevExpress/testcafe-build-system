@@ -52,6 +52,7 @@ group:
     DevExpress/mocha-reporter-spec-with-retries
     DevExpress/match-url-wildcard
     DevExpress/is-jquery-obj
+    DevExpress/create-testcafe
   files:
     - source: workflows/
       dest: .github/workflows/
