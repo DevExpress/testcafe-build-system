@@ -9,11 +9,16 @@ inputs:
     required: false
   owner:
     required: false
+  node-version:
+    required: false
+    default: 18
     
 runs:
   using: composite
   steps:
     - uses: DevExpress/testcafe-build-system/actions/prepare@main
+      with:
+        node-version: ${{ inputs.node-version }}
 
     - uses: DevExpress/testcafe-build-system/actions/build@main
 
