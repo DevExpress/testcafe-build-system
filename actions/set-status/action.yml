@@ -3,6 +3,9 @@ name: Set status
 inputs:
   status:
     required: true
+  artifacts-path:
+    required: false
+    default: ''
 
 runs:
   using: composite
@@ -16,5 +19,5 @@ runs:
             sha: context.payload.inputs.sha,
             context: context.workflow,
             state: '${{ inputs.status }}',
-            target_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}${{inputs.artifacts-path}}`
+            target_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}${{ inputs.artifacts-path }}`
           });
