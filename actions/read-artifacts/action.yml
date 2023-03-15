@@ -37,14 +37,9 @@ runs:
             }
           }
 
-          console.log(${{ inputs.is-docker }});
-          console.log(${{ !inputs.is-docker }});
-          console.log(${{ !!inputs.is-docker }});
-          console.log(${{ inputs.is-docker == 'true' }});
-          console.log(${{ inputs.is-docker == 'false' }});
-
-          const artifactName = ${{ inputs.is-docker }} ? 'docker' : 'npm';
-          const packageName =  ${{ inputs.is-docker }} ? 'docker.zip' : 'package.zip';
+          const isDocker     = ${{ inputs.is-docker == 'true' }};
+          const artifactName = isDocker ? 'docker' : 'npm';
+          const packageName  = isDocker ? 'docker.zip' : 'package.zip';
 
           const { data: artifact } = await github.request(artifacts.artifacts.find(artifact=> artifact.name === artifactName).archive_download_url);
           require('fs').writeFileSync(require('path').join(process.env.GITHUB_WORKSPACE, packageName), Buffer.from(artifact))
