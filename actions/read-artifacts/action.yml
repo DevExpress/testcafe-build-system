@@ -4,13 +4,10 @@ inputs:
   package-name:
     required: true
   is-docker:
-    required: true
+    required: false
     default: false
   node-version:
     required: false
-  is-docker-num:
-    required: false
-    default: 0
 
 runs:
   using: composite
@@ -19,15 +16,6 @@ runs:
       uses: actions/setup-node@v3
       with: 
         node-version: ${{ inputs.node-version }}
-
-    - shell: bash
-      run: |
-        echo "!inputs.is-docker - ${{ !inputs.is-docker }}"
-        echo "inputs.is-docker - ${{ inputs.is-docker }}"
-
-    - shell: bash
-      run: |
-        echo "inputs.package-name - ${{ inputs.package-name }}"
 
     - uses: actions/github-script@v6
       with:
@@ -49,6 +37,10 @@ runs:
             }
           }
 
+          console.log(${{ inputs.is-docker }});
+          console.log(${{ !inputs.is-docker }});
+          console.log(${{ !!inputs.is-docker }});
+
           const artifactName = ${{ inputs.is-docker }} ? 'docker' : 'npm';
           const packageName =  ${{ inputs.is-docker }} ? 'docker.zip' : 'package.zip';
 
@@ -56,26 +48,13 @@ runs:
           require('fs').writeFileSync(require('path').join(process.env.GITHUB_WORKSPACE, packageName), Buffer.from(artifact))
 
     - shell: bash
-      run: |
-        echo "!inputs.is-docker - ${{ !inputs.is-docker }}"
-        echo "inputs.is-docker - ${{ inputs.is-docker }}"
-        echo "inputs.is-docker == false - ${{ inputs.is-docker == false }}"
-        echo "inputs.is-docker == true - ${{ inputs.is-docker == true }}"
-        echo "!!inputs.is-docker - ${{ !!inputs.is-docker }}"
-        echo "inputs.is-docker-num - ${{ inputs.is-docker-num }}"
-
-    - shell: bash
-      run: |
-        echo "inputs.package-name - ${{ inputs.package-name }}"
-
-    - shell: bash
-      if: ${{ inputs.is-docker-num == 0 }}
+      if: ${{ inputs.is-docker == 'false' }}
       run: |
         unzip package.zip
         tar --strip-components=1 -xzf ${{ inputs.package-name }}-*.tgz
 
     - shell: bash
-      if: ${{ inputs.is-docker-num == 1 }}
+      if: ${{ inputs.is-docker == 'true' }}
       run: |
         unzip docker.zip
         docker load -i ${{ inputs.package-name }}-*.tar
