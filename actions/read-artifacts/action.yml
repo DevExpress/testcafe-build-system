@@ -49,7 +49,8 @@ runs:
     - shell: bash
       name: Is docker?
       run: |
-        echo "is docker? - ${{ !inputs.is-docker }}"
+        echo "!inputs.is-docker - ${{ !inputs.is-docker }}"
+        echo "inputs.is-docker - ${{ inputs.is-docker }}"
 
     - shell: bash
       if: ${{ !inputs.is-docker }}
