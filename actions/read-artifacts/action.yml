@@ -1,6 +1,9 @@
 name: Read artifacts for tests
 
 inputs:
+  package-name:
+    required: true
+    type: string
   is-docker:
     required: false
     type: boolean
@@ -45,11 +48,11 @@ runs:
 
     - run: |
         unzip package.zip
-        tar --strip-components=1 -xzf testcafe-*.tgz
+        tar --strip-components=1 -xzf ${{ inputs.package-name }}*.tgz
       shell: bash # define shell in the case when os isn't ubuntu
       if: ${{ !inputs.is-docker }}
 
     - run: |
         unzip docker.zip
-        docker load -i testcafe-*.tar
+        docker load -i ${{ inputs.package-name }}*.tar
       if: ${{ inputs.is-docker }}
