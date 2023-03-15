@@ -22,6 +22,10 @@ runs:
         echo "!inputs.is-docker - ${{ !inputs.is-docker }}"
         echo "inputs.is-docker - ${{ inputs.is-docker }}"
 
+    - shell: bash
+      run: |
+        echo "inputs.package-name - ${{ inputs.package-name }}"
+
     - uses: actions/github-script@v6
       with:
         script: |
@@ -52,6 +56,10 @@ runs:
       run: |
         echo "!inputs.is-docker - ${{ !inputs.is-docker }}"
         echo "inputs.is-docker - ${{ inputs.is-docker }}"
+
+    - shell: bash
+      run: |
+        echo "inputs.package-name - ${{ inputs.package-name }}"
 
     - shell: bash
       if: ${{ !inputs.is-docker }}
