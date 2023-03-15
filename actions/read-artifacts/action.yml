@@ -3,13 +3,10 @@ name: Read artifacts for tests
 inputs:
   package-name:
     required: true
-    type: string
   is-docker:
     required: false
-    type: boolean
     default: false
   node-version:
-    type: number
     required: false
 
 runs:
@@ -19,6 +16,11 @@ runs:
       uses: actions/setup-node@v3
       with: 
         node-version: ${{ inputs.node-version }}
+
+    - shell: bash
+      run: |
+        echo "!inputs.is-docker - ${{ !inputs.is-docker }}"
+        echo "inputs.is-docker - ${{ inputs.is-docker }}"
 
     - uses: actions/github-script@v6
       with:
@@ -47,7 +49,6 @@ runs:
           require('fs').writeFileSync(require('path').join(process.env.GITHUB_WORKSPACE, packageName), Buffer.from(artifact))
 
     - shell: bash
-      name: Is docker?
       run: |
         echo "!inputs.is-docker - ${{ !inputs.is-docker }}"
         echo "inputs.is-docker - ${{ inputs.is-docker }}"
