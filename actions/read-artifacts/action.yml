@@ -3,13 +3,10 @@ name: Read artifacts for tests
 inputs:
   package-name:
     required: true
-    type: string
   is-docker:
     required: false
-    type: boolean
     default: false
   node-version:
-    type: number
     required: false
 
 runs:
@@ -40,20 +37,21 @@ runs:
             }
           }
 
-          const artifactName = ${{ inputs.is-docker }} ? 'docker' : 'npm';
-          const packageName =  ${{ inputs.is-docker }} ? 'docker.zip' : 'package.zip';
+          const isDocker     = ${{ inputs.is-docker == 'true' }};
+          const artifactName = isDocker ? 'docker' : 'npm';
+          const packageName  = isDocker ? 'docker.zip' : 'package.zip';
 
           const { data: artifact } = await github.request(artifacts.artifacts.find(artifact=> artifact.name === artifactName).archive_download_url);
           require('fs').writeFileSync(require('path').join(process.env.GITHUB_WORKSPACE, packageName), Buffer.from(artifact))
 
-    - run: |
+    - shell: bash
+      if: ${{ inputs.is-docker == 'false' }}
+      run: |
         unzip package.zip
         tar --strip-components=1 -xzf ${{ inputs.package-name }}-*.tgz
-      shell: bash
-      if: ${{ !inputs.is-docker }}
 
-    - run: |
+    - shell: bash
+      if: ${{ inputs.is-docker == 'true' }}
+      run: |
         unzip docker.zip
         docker load -i ${{ inputs.package-name }}-*.tar
-      shell: bash
-      if: ${{ inputs.is-docker }}
