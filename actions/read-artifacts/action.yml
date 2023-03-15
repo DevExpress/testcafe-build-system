@@ -46,14 +46,19 @@ runs:
           const { data: artifact } = await github.request(artifacts.artifacts.find(artifact=> artifact.name === artifactName).archive_download_url);
           require('fs').writeFileSync(require('path').join(process.env.GITHUB_WORKSPACE, packageName), Buffer.from(artifact))
 
-    - run: |
+    - shell: bash
+      name: Is docker?
+      run: |
+        echo "is docker? - ${{ !inputs.is-docker }}"
+
+    - shell: bash
+      if: ${{ !inputs.is-docker }}
+      run: |
         unzip package.zip
         tar --strip-components=1 -xzf ${{ inputs.package-name }}-*.tgz
-      shell: bash
-      if: ${{ !inputs.is-docker }}
 
-    - run: |
+    - shell: bash
+      if: ${{ inputs.is-docker }}
+      run: |
         unzip docker.zip
         docker load -i ${{ inputs.package-name }}-*.tar
-      shell: bash
-      if: ${{ inputs.is-docker }}
