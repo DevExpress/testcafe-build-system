@@ -49,10 +49,11 @@ runs:
     - run: |
         unzip package.zip
         tar --strip-components=1 -xzf ${{ inputs.package-name }}-*.tgz
-      shell: bash # define shell in the case when os isn't ubuntu
+      shell: bash
       if: ${{ !inputs.is-docker }}
 
     - run: |
         unzip docker.zip
         docker load -i ${{ inputs.package-name }}-*.tar
+      shell: bash
       if: ${{ inputs.is-docker }}
