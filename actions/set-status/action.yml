@@ -9,7 +9,6 @@ runs:
   steps:
     - uses: actions/github-script@v6
       with:
-        github-token: ${{ secrets.ACTIVE_TOKEN }}
         script: |
           await github.rest.repos.createCommitStatus({
             owner: context.repo.owner,
