@@ -40,6 +40,8 @@ runs:
           console.log(${{ inputs.is-docker }});
           console.log(${{ !inputs.is-docker }});
           console.log(${{ !!inputs.is-docker }});
+          console.log(${{ inputs.is-docker == 'true' }});
+          console.log(${{ inputs.is-docker == 'false' }});
 
           const artifactName = ${{ inputs.is-docker }} ? 'docker' : 'npm';
           const packageName =  ${{ inputs.is-docker }} ? 'docker.zip' : 'package.zip';
