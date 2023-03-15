@@ -4,7 +4,7 @@ inputs:
   package-name:
     required: true
   is-docker:
-    required: false
+    required: true
     default: false
   node-version:
     required: false
