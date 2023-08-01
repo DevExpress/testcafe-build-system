@@ -2,57 +2,50 @@ group:
   repos: |
     DevExpress/acorn-hammerhead
     DevExpress/angular-testcafe
+    DevExpress/bin-v8-flags-filter
     DevExpress/broken-link-checker
     DevExpress/device-specs
+    DevExpress/error-stack-parser
+    DevExpress/eslint-plugin-hammerhead
     DevExpress/esotope-hammerhead
     DevExpress/generator-testcafe-browser-provider
     DevExpress/generator-testcafe-reporter
     DevExpress/gulp-ll-next
     DevExpress/gulp-mocha-simple
     DevExpress/gulp-step
-    DevExpress/gulp-testcafe
     DevExpress/gulp-webmake
     DevExpress/hammerhead-health-monitor
+    DevExpress/is-jquery-obj
     DevExpress/json-hammerhead
     DevExpress/linux-platform-info
     DevExpress/log-update-async-hook
+    DevExpress/match-url-wildcard
+    DevExpress/mocha-reporter-spec-with-retries
     DevExpress/modules-webmake
     DevExpress/moment-duration-format-commonjs
+    DevExpress/npm-auditor
     DevExpress/saucelabs-connector
+    DevExpress/sauce-tunnel
     DevExpress/testcafe
-    DevExpress/testcafe-action
-    DevExpress/testcafe-angular-selectors
-    DevExpress/testcafe-aurelia-selectors
     DevExpress/testcafe-browser-provider-browserstack
     DevExpress/testcafe-browser-provider-electron
     DevExpress/testcafe-browser-provider-saucelabs
     DevExpress/testcafe-browser-tools
     DevExpress/testcafe-example-multiuser-scenario
+    DevExpress/testcafe-example-running-tests-using-saucectl
+    DevExpress/testcafe-example-running-tests-using-travis-and-saucelabs
     DevExpress/testcafe-examples
     DevExpress/testcafe-hammerhead
+    DevExpress/testcafeio-examples
     DevExpress/testcafe-legacy-api
-    DevExpress/testcafe-once-hook
     DevExpress/testcafe-react-selectors
-    DevExpress/testcafe-reporter-dashboard
     DevExpress/testcafe-reporter-json
     DevExpress/testcafe-reporter-list
     DevExpress/testcafe-reporter-minimal
     DevExpress/testcafe-reporter-nunit
     DevExpress/testcafe-reporter-spec
     DevExpress/testcafe-reporter-xunit
-    DevExpress/testcafe-safe-storage
-    DevExpress/testcafe-vue-selectors
     DevExpress/testcafe-selector-generator
-    DevExpress/testcafe-example-running-tests-using-travis-and-saucelabs
-    DevExpress/npm-auditor
-    DevExpress/error-stack-parser
-    DevExpress/testcafe-example-running-tests-using-saucectl
-    DevExpress/sauce-tunnel
-    DevExpress/eslint-plugin-hammerhead
-    DevExpress/mocha-reporter-spec-with-retries
-    DevExpress/match-url-wildcard
-    DevExpress/is-jquery-obj
-    DevExpress/create-testcafe
   files:
     - source: workflows/
       dest: .github/workflows/
