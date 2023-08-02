@@ -3,7 +3,6 @@ group:
     DevExpress/acorn-hammerhead
     DevExpress/angular-testcafe
     DevExpress/bin-v8-flags-filter
-    DevExpress/broken-link-checker
     DevExpress/device-specs
     DevExpress/error-stack-parser
     DevExpress/eslint-plugin-hammerhead
@@ -13,15 +12,12 @@ group:
     DevExpress/gulp-ll-next
     DevExpress/gulp-mocha-simple
     DevExpress/gulp-step
-    DevExpress/gulp-webmake
     DevExpress/hammerhead-health-monitor
     DevExpress/is-jquery-obj
-    DevExpress/json-hammerhead
     DevExpress/linux-platform-info
     DevExpress/log-update-async-hook
     DevExpress/match-url-wildcard
     DevExpress/mocha-reporter-spec-with-retries
-    DevExpress/modules-webmake
     DevExpress/moment-duration-format-commonjs
     DevExpress/npm-auditor
     DevExpress/saucelabs-connector
