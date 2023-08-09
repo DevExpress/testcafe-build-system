@@ -3,6 +3,8 @@ name: "Detect build scripts"
 outputs:
   name:
     value: ${{ steps.detect_scripts.outputs.name }}
+  pack-name:
+    value: ${{ steps.detect_scripts.outputs.pack-name }}
   version:
     value: ${{ steps.detect_scripts.outputs.version }}
   scripts:
@@ -29,6 +31,7 @@ runs:
           const packageInfo     = require(packageInfoPath);
 
           core.setOutput('name', packageInfo.name);
+          core.setOutput('pack-name', packageInfo.name.replace(/\//g, '-'));
           core.setOutput('version', packageInfo.version);
           core.setOutput('scripts', Object.keys(packageInfo.scripts).filter(script => script.startsWith('build')))
 

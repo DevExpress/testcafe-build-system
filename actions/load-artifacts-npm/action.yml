@@ -11,7 +11,7 @@ runs:
         name: npm
 
     - shell: bash
-      run: tar --strip-components=1 -xzf '${{ format('.builds/{0}-{1}.tgz', steps.detect-package-metadata.outputs.name, steps.detect-package-metadata.outputs.version) }}'
+      run: tar --strip-components=1 -xzf '${{ format('.builds/{0}-{1}.tgz', steps.detect-package-metadata.outputs.pack-name, steps.detect-package-metadata.outputs.version) }}'
 
     - uses: actions/github-script@v6
       with:
@@ -19,5 +19,5 @@ runs:
           const workspaces = JSON.parse(${{ toJSON(steps.detect-package-metadata.outputs.workspaces) }});
 
           for (const workspace of workspaces)
-            await exec.exec(`tar --strip-components=1 -C ${workspace.path} -xzf .builds/${workspace.name.replace(/\//g, '-')}-${workspace.version}.tgz`)
+            await exec.exec(`tar --strip-components=1 -C ${workspace.path} -xzf .builds/${workspace.name}-${workspace.version}.tgz`)
 
