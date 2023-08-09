@@ -19,5 +19,5 @@ runs:
           const workspaces = JSON.parse(${{ toJSON(steps.detect-package-metadata.outputs.workspaces) }});
 
           for (const workspace of workspaces)
-            await exec.exec(`tar --strip-components=1 -C ${workspace.path} -xzf .builds/${workspace.name}-${workspace.version}.tgz`)
+            await exec.exec(`tar --strip-components=1 -C ${workspace.path} -xzf .builds/${workspace.name.replace(/\//g, '-')}-${workspace.version}.tgz`)
 
