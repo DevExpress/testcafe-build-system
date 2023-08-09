@@ -11,7 +11,7 @@ inputs:
     required: false
   node-version:
     required: false
-    default: 16
+    default: 18
     
 runs:
   using: composite
