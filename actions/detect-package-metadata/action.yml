@@ -31,7 +31,7 @@ runs:
           const packageInfo     = require(packageInfoPath);
 
           core.setOutput('name', packageInfo.name);
-          core.setOutput('pack-name', packageInfo.name.replace(/\//g, '-'));
+          core.setOutput('pack-name', packageInfo.name.replace('@', '').replace(/\//g, '-'));
           core.setOutput('version', packageInfo.version);
           core.setOutput('scripts', Object.keys(packageInfo.scripts).filter(script => script.startsWith('build')))
 
