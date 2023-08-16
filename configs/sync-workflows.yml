@@ -3,8 +3,8 @@ group:
     DevExpress/acorn-hammerhead
     DevExpress/angular-testcafe
     DevExpress/bin-v8-flags-filter
+    DevExpress/callsite-record
     DevExpress/device-specs
-    DevExpress/error-stack-parser
     DevExpress/eslint-plugin-hammerhead
     DevExpress/esotope-hammerhead
     DevExpress/generator-testcafe-browser-provider
@@ -23,6 +23,7 @@ group:
     DevExpress/saucelabs-connector
     DevExpress/sauce-tunnel
     DevExpress/testcafe
+    DevExpress/testcafe.io
     DevExpress/testcafe-browser-provider-browserstack
     DevExpress/testcafe-browser-provider-electron
     DevExpress/testcafe-browser-provider-saucelabs
@@ -42,6 +43,7 @@ group:
     DevExpress/testcafe-reporter-spec
     DevExpress/testcafe-reporter-xunit
     DevExpress/testcafe-selector-generator
+    DevExpress/testcafe-studio
   files:
     - source: workflows/
       dest: .github/workflows/
