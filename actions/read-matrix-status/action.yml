@@ -15,4 +15,4 @@ runs:
     - name: Read matrix status
       id: matrix-status
       shell: bash
-      run: echo status=$([ $(grep -h -v "success" matrix-status-*.txt | wc -l) -eq 0 ] && echo "failure" || echo "success") >> "$GITHUB_OUTPUT"
+      run: echo status=$([ $(grep -h -v "success" matrix-status-*.txt | wc -l) -eq 0 ] && echo "success" || echo "failure") >> "$GITHUB_OUTPUT"
