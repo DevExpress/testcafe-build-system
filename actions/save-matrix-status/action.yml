@@ -1,0 +1,17 @@
+name: Save matrix status
+
+inputs:
+  job-id:
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Save status
+      shell: bash
+      run: echo ${{ job.status }} > matrix-status-${{ inputs.job-id }}.txt
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: matrix-status
+        path: matrix-status-${{ inputs.job-id }}.txt
