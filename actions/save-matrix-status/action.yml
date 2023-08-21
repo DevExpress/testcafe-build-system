@@ -3,8 +3,6 @@ name: Save matrix status
 inputs:
   job-id:
     required: true
-  job-status:
-    required: true
 
 runs:
   using: composite
