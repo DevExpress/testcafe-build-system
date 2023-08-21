@@ -2,7 +2,7 @@ name: Read matrix status
 
 outputs:
   status: 
-    description: "Matrix status"
+    description: "Matrix status (success|failure)"
     value: ${{ steps.matrix-status.outputs.status }}
 
 runs:
