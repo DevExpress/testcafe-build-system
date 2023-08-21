@@ -1,5 +1,10 @@
 name: Read matrix status
 
+outputs:
+  status: 
+    description: "Matrix status"
+    value: ${{ steps.matrix-status.outputs.status }}
+
 runs:
   using: composite
   steps:
@@ -10,4 +15,4 @@ runs:
     - name: Read matrix status
       id: matrix-status
       shell: bash
-      run: echo failure=$([ $(grep -h -v "success" matrix-status-*.txt | wc -l) -eq 0 ] && echo "failure" || echo "success") >> "$GITHUB_OUTPUT"
+      run: echo status=$([ $(grep -h -v "success" matrix-status-*.txt | wc -l) -eq 0 ] && echo "failure" || echo "success") >> "$GITHUB_OUTPUT"
