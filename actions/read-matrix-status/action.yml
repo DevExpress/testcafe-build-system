@@ -16,3 +16,7 @@ runs:
       id: matrix-status
       shell: bash
       run: echo status=$([ $(grep -h -v "success" matrix-status-*.txt | wc -l) -eq 0 ] && echo "success" || echo "failure") >> "$GITHUB_OUTPUT"
+
+    - name: Remove files with statuses
+      shell: bash
+      run: rm matrix-status-*.txt
