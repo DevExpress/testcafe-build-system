@@ -11,7 +11,7 @@ runs:
   steps:
     - name: Save status
       shell: bash
-      run: echo ${{ inputs.job-status }} > matrix-status-${{ inputs.job-id }}.txt
+      run: echo ${{ job.status }} > matrix-status-${{ inputs.job-id }}.txt
 
     - uses: actions/upload-artifact@v3
       with:
