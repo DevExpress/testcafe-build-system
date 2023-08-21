@@ -1,0 +1,13 @@
+name: Read matrix status
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/download-artifact@v3
+      with:
+        name: matrix-status
+
+    - name: Read matrix status
+      id: matrix-status
+      shell: bash
+      run: echo failure=$([ $(grep -h -v "success" matrix-status-*.txt | wc -l) -eq 0 ] && echo "failure" || echo "success") >> "$GITHUB_OUTPUT"
