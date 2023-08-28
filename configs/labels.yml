@@ -5,7 +5,7 @@
 :
   # Post a comment
   comment: |
-    Thank you for your inquiry. It looks like you're asking a question. We use GitHub to track bug reports and feature requests (see [Contributing](https://github.com/DevExpress/testcafe#contributing)). Address your question to the TestCafe community on [StackOverflow](https://stackoverflow.com/questions/ask?tags=testcafe) instead.
+    Thank you for your inquiry. It looks like you're asking a question. We use GitHub to track bug reports and enhancement requests (see [Contributing](https://github.com/DevExpress/testcafe#contributing)). Address your question to the TestCafe community on [StackOverflow](https://stackoverflow.com/questions/ask?tags=testcafe) instead.
     
     If you encountered a bug, [open a new issue](https://github.com/DevExpress/testcafe/issues/new?template=bug-report.md), and follow the "bug report" template. Thank you in advance.
   unlabel: 'STATE: Need response'
@@ -76,7 +76,7 @@
 :
   # Post a comment
   comment: |
-    This enhancement does not appear on the [TestCafe roadmap](https://testcafe.io/402949/roadmap). The TestCafe team has not yet allocated any future resources to this feature's development, and cannot give you an ETA. If this capability is important for you, please submit a Pull Request with its implementation. See the [Сontribution guide](https://github.com/DevExpress/testcafe/blob/master/CONTRIBUTING.md) for more information.
+    This enhancement does not appear on the [TestCafe roadmap](https://testcafe.io/402949/roadmap). The TestCafe team has not yet allocated any resources to its development, and cannot give you an ETA on its completion. If this capability is important for you, please submit a Pull Request with its implementation. See the [Сontribution guide](https://github.com/DevExpress/testcafe/blob/master/CONTRIBUTING.md) for more information.
   unlabel:
     - 'STATE: Outdated proposal'
     - 'STATE: Need response'
@@ -114,7 +114,7 @@
 :
   # Post a comment
   comment: |
-    We appreciate you taking the time to share information about this issue. We reproduced the bug and added this ticket to our internal to-do queue. We'll update this thread once we have news.
+    We appreciate you taking the time to share information about this issue. We reproduced the bug and added this ticket to our internal task queue. We'll update this thread once we have news.
   unlabel:
     - 'STATE: Issue accepted'
     - 'STATE: Need response'
