@@ -35,9 +35,9 @@
 :
   # Post a comment
   comment: |
-    Thank you for submitting a bug report. We would love to help you investigate the issue. Unfortunately, we cannot reproduce the bug, because your code example accesses a password-protected resource.
+    Thank you for submitting a bug report. We would love to help you investigate the issue. Unfortunately, we cannot reproduce the bug, because your code example accesses a resource that requires authentication.
     
-    Please create a [Minimal Working Example](https://testcafe.io/documentation/402636/faq/general-info#how-to-create-a-minimal-working-example-when-you-submit-an-issue) with a **public** test page URL. Do not share any private data with the DevExpress support team - company policy prohibits us from accessing our customers' private resources. We look forward to your response.
+    Please create a [Minimal Example](https://testcafe.io/documentation/402636/faq/general-info#how-to-create-a-minimal-working-example-when-you-submit-an-issue) that works without authentication. Do not share any private data - the DevExpress support team cannot access private resources. We look forward to your response.
 
   label: 'STATE: Need clarification'
   unlabel: 
@@ -76,7 +76,7 @@
 :
   # Post a comment
   comment: |
-    This enhancement does not appear on the [TestCafe roadmap](https://testcafe.io/402949/roadmap). The TestCafe team has not yet allocated any resources to its development, and cannot give you an ETA on its completion. If this capability is important for you, please submit a Pull Request with its implementation. See the [Сontribution guide](https://github.com/DevExpress/testcafe/blob/master/CONTRIBUTING.md) for more information.
+    The TestCafe team has yet to allocate any resources for the development of this capability. We cannot give you an ETA on its completion. If this capability is important for you, please submit a Pull Request with an implementation. See the [Сontribution guide](https://github.com/DevExpress/testcafe/blob/master/CONTRIBUTING.md) for more information.
   unlabel:
     - 'STATE: Outdated proposal'
     - 'STATE: Need response'
@@ -105,7 +105,7 @@
 :
   # Post a comment
   comment: |
-    Thank you for your contribution to TestCafe. A TestCafe team member will review this PR shortly.
+    Thank you for your contribution to TestCafe. When a member of the TestCafe team becomes available, they will review this PR.
   unlabel:
     - 'STATE: PR Review Pending'
     - 'STATE: Need response'
