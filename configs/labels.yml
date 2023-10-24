@@ -37,7 +37,7 @@
   comment: |
     Thank you for submitting a bug report. We would love to help you investigate the issue. Unfortunately, we cannot reproduce the bug, because your code example accesses a web resource that requires authentication.
     
-    Please create a [Minimal Example](https://testcafe.io/documentation/402636/faq/general-info#how-to-create-a-minimal-working-example-when-you-submit-an-issue) that works locally, or without authentication. Do not share any private data - the DevExpress support team cannot access private resources. We look forward to your response.
+    Please create a [Minimal Example](https://testcafe.io/documentation/402636/faq/general-info#how-to-create-a-minimal-working-example-when-you-submit-an-issue) that works locally or without authentication. Do not share any private data - the DevExpress support team cannot access private resources. We look forward to your response.
 
   label: 'STATE: Need clarification'
   unlabel: 
