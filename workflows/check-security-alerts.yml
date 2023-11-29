@@ -25,75 +25,6 @@ jobs:
               security:   'security notification',
             };
 
-            async function getDependabotAlertInfo (alertNumber) {
-              const dependabotListAlertsUrl  = `https://api.github.com/repos/${ owner }/${ repo }/dependabot/alerts/${ alertNumber }`;
-              const dependabotRequestOptions = {
-                headers: { 'Authorization': 'Bearer ${{ secrets.ACTIVE_TOKEN }}' }
-              }
-
-              const response = await fetch(dependabotListAlertsUrl, dependabotRequestOptions);
-              const data     = await response.json();
-
-              if (data.state)
-                return data;
-
-              return null;
-            }
-
-            async function isDependabotAlertOpen (alertNumber) {
-              const alert = await getDependabotAlertInfo(alertNumber);
-
-              return alert?.state == 'open';
-            }
-
-            async function getDependabotAlerts () {
-              const dependabotListAlertsUrl  = `https://api.github.com/repos/${ owner }/${ repo }/dependabot/alerts?state=${ state }`;
-              const dependabotRequestOptions = {
-                headers: { 'Authorization': 'Bearer ${{ secrets.ACTIVE_TOKEN }}' }
-              }
-
-              const response = await fetch(dependabotListAlertsUrl, dependabotRequestOptions);
-              const data     = await response.json();
-
-              // If data isn't arry somethig goes wrong
-              if (Array.isArray(data))
-                return data;
-
-              return [];
-            }
-
-            async function getCodeqlAlerts () {
-              // When CodeQL is turned of it throws error
-              try {
-                const { data }  = await github.rest.codeScanning.listAlertsForRepo({ owner, repo, state });
-
-                return data;
-              } catch (_) {
-                return [];
-              }
-            }
-
-            async function createIssue ({owner, repo, labels, originRepo, summary, description, link, package = ''}) {
-              const title = `[${originRepo}] ${summary}`;
-              const body  = ''
-                + `#### Repository: \`${ originRepo }\`\n`
-                + (!!package ? `#### Package: \`${ package }\`\n` : '')
-                + `#### Description:\n`
-                + `${ description }\n`
-                + `#### Link: ${ link }`
-
-              return github.rest.issues.create({ owner, repo, title, body, labels });
-            }
-
-            function needCreateIssue (alert) {
-              return !alertDictionary[alert.html_url]
-                    && Date.now() - new Date(alert.created_at) <= 1000 * 60 * 60 * 24;
-            }
-
-            async function closeIssue (number) {
-              return github.rest.issues.create({ owner, repo, issue_number: number, state: 'closed' });
-            }
-            
             const dependabotAlerts      = await getDependabotAlerts();
             const codeqlAlerts          = await getCodeqlAlerts();
             const {data: existedIssues} = await github.rest.issues.listForRepo({ owner, repo, labels: [labels.security], state });
@@ -145,3 +76,72 @@ jobs:
                 link:        alert.html_url, 
               })
             });
+
+            async function getDependabotAlerts () {
+              const dependabotListAlertsUrl  = `https://api.github.com/repos/${ owner }/${ repo }/dependabot/alerts?state=${ state }`;
+              const dependabotRequestOptions = {
+                headers: { 'Authorization': 'Bearer ${{ secrets.ACTIVE_TOKEN }}' }
+              }
+
+              const response = await fetch(dependabotListAlertsUrl, dependabotRequestOptions);
+              const data     = await response.json();
+
+              // If data isn't arry somethig goes wrong
+              if (Array.isArray(data))
+                return data;
+
+              return [];
+            }
+
+            async function getCodeqlAlerts () {
+              // When CodeQL is turned of it throws error
+              try {
+                const { data }  = await github.rest.codeScanning.listAlertsForRepo({ owner, repo, state });
+
+                return data;
+              } catch (_) {
+                return [];
+              }
+            }
+
+            async function isDependabotAlertOpen (alertNumber) {
+              const alert = await getDependabotAlertInfo(alertNumber);
+
+              return alert?.state == 'open';
+            }
+
+            async function getDependabotAlertInfo (alertNumber) {
+              const dependabotListAlertsUrl  = `https://api.github.com/repos/${ owner }/${ repo }/dependabot/alerts/${ alertNumber }`;
+              const dependabotRequestOptions = {
+                headers: { 'Authorization': 'Bearer ${{ secrets.ACTIVE_TOKEN }}' }
+              }
+
+              const response = await fetch(dependabotListAlertsUrl, dependabotRequestOptions);
+              const data     = await response.json();
+
+              if (data.state)
+                return data;
+
+              return null;
+            }
+
+            function needCreateIssue (alert) {
+              return !alertDictionary[alert.html_url]
+                    && Date.now() - new Date(alert.created_at) <= 1000 * 60 * 60 * 24;
+            }
+
+            async function createIssue ({owner, repo, labels, originRepo, summary, description, link, package = ''}) {
+              const title = `[${originRepo}] ${summary}`;
+              const body  = ''
+                + `#### Repository: \`${ originRepo }\`\n`
+                + (!!package ? `#### Package: \`${ package }\`\n` : '')
+                + `#### Description:\n`
+                + `${ description }\n`
+                + `#### Link: ${ link }`
+
+              return github.rest.issues.create({ owner, repo, title, body, labels });
+            }
+
+            async function closeIssue (number) {
+              return github.rest.issues.create({ owner, repo, issue_number: number, state: 'closed' });
+            }
