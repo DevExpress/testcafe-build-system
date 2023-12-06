@@ -49,3 +49,5 @@ group:
       dest: .github/workflows/
     - source: configs/labels.yml
       dest: .github/labels.yml
+    - source: scripts/check-security-alerts.mjs
+      dest: .github/scripts/check-security-alerts.mjs
