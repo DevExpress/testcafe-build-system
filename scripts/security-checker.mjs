@@ -9,6 +9,11 @@ const LABELS = {
   security:   'security notification',
 };
 
+const ALERT_TYPES = {
+  dependabot: 'dependabot',
+  codeq:      'codeql',
+}
+
 class SecurityChecker {
   constructor (github, context, issueRepo) {
       this.github    = github;
@@ -27,8 +32,8 @@ class SecurityChecker {
       this.alertDictionary = this.createAlertDictionary(existedIssues);
 
       await this.closeSpoiledIssues();
-      this.createDependabotlIssues(dependabotAlerts);
-      this.createCodeqlIssues(codeqlAlerts);
+      await this.createDependabotlIssues(dependabotAlerts);
+      await this.createCodeqlIssues(codeqlAlerts);
   }
 
   async getDependabotAlerts () {
@@ -64,15 +69,13 @@ class SecurityChecker {
 
   createAlertDictionary (existedIssues) {
       return existedIssues.reduce((res, issue) => {
-          const [, url, number] = issue.body.match(/Link:\s*(https.*?(\d+)$)/);
+          const [, repo] = issue.body.match(/Repository:\s*`(.*)`/);
+          const [, url, type, number] = issue.body.match(/Link:\s*(https:.*\/(dependabot|code-scanning)\/(\d+))/);
 
-          if (!url)
+          if (!url || repo !== this.context.repo)
               return res;
 
-          res[url] = {
-              issue, number,
-              isDependabot: url.includes('dependabot'),
-          };
+          res[url] = { issue, number, type };
 
           return res;
       }, {});
@@ -82,7 +85,7 @@ class SecurityChecker {
       for (const key in this.alertDictionary) {
           const alert = this.alertDictionary[key];
 
-          if (alert.isDependabot) {
+          if (alert.type === ALERT_TYPES.dependabot) {
               const isAlertOpened = await this.isDependabotAlertOpened(alert.number);
 
               if (isAlertOpened)
@@ -154,7 +157,7 @@ class SecurityChecker {
   }
 
   needCreateIssue (alert) {
-      return !this.alertDictionary[alert.html_url] && Date.now() - new Date(alert.created_at) <= 1000 * 60 * 60 * 24;;
+      return !this.alertDictionary[alert.html_url] && Date.now() - new Date(alert.created_at) <= 1000 * 60 * 60 * 24;
   }
 
   async createIssue ({ labels, originRepo, summary, description, link, issuePackage = '' }) {
