@@ -126,11 +126,11 @@ class SecurityChecker {
   }
 
   async createDependabotlIssues (dependabotAlerts) {
-      dependabotAlerts.forEach(alert => {
+    for (const alert of dependabotAlerts) {
           if (!this.needCreateIssue(alert))
               return;
 
-          this.createIssue({
+          await this.createIssue({
               labels:       [LABELS.dependabot, LABELS.security, alert.dependency.scope],
               originRepo:   this.context.repo,
               summary:      alert.security_advisory.summary,
@@ -138,22 +138,22 @@ class SecurityChecker {
               link:         alert.html_url,
               issuePackage: alert.dependency.package.name,
           });
-      });
+      }
   }
 
   async createCodeqlIssues (codeqlAlerts) {
-      codeqlAlerts.forEach(alert => {
+      for (const alert of codeqlAlerts) {
           if (!this.needCreateIssue(alert))
               return;
 
-          this.createIssue({
+          await this.createIssue({
               labels:      [LABELS.codeql, LABELS.security],
               originRepo:  this.context.repo,
               summary:     alert.rule.description,
               description: alert.most_recent_instance.message.text,
               link:        alert.html_url,
           });
-      });
+      }
   }
 
   needCreateIssue (alert) {
