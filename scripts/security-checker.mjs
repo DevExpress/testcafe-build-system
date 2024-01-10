@@ -69,13 +69,15 @@ class SecurityChecker {
 
   createAlertDictionary (existedIssues) {
       return existedIssues.reduce((res, issue) => {
-          const [, repo] = issue.body.match(/Repository:\s*`(.*)`/);
-          const [, url, type, number] = issue.body.match(/Link:\s*(https:.*\/(dependabot|code-scanning)\/(\d+))/);
+          const [repo] = issue.body.match(/(?<=Repository:)[\s\S]*?(?=####|$)/g);
+          const [, url, type] = issue.body.match(/Link:\s*(https:.*\/(dependabot|code-scanning)\/(\d+))/);
+          const [, cveId] = issue.body.match(/CVE ID:\s*`(.*)`/);
+          const [, ghsaId] = issue.body.match(/GHSA ID:\s*`(.*)`/);
 
-          if (!url || repo !== this.context.repo)
+          if (!url)
               return res;
 
-          res[url] = { issue, number, type };
+          res[issue.title] = { issue, type, cveId, ghsaId, repo};
 
           return res;
       }, {});
@@ -86,12 +88,17 @@ class SecurityChecker {
           const alert = this.alertDictionary[key];
 
           if (alert.type === ALERT_TYPES.dependabot) {
-              const isAlertOpened = await this.isDependabotAlertOpened(alert.number);
+              const matchAlertInIssue = alert.issue.body.match(new RegExp(`\`${this.context.repo}\` - Link:\\s*(https:.*/(dependabot|code-scanning)/(\\d+))`));
+
+              if (!matchAlertInIssue) 
+                  continue;
+
+              const isAlertOpened = await this.isDependabotAlertOpened(matchAlertInIssue[3]);
 
               if (isAlertOpened)
                   continue;
 
-              await this.closeIssue(alert.issue.number);
+              await this.closeAlertOrIssue(alert.issue);
           }
       }
   }
@@ -116,19 +123,53 @@ class SecurityChecker {
       }
   }
 
-  async closeIssue (issueNumber) {
+  async closeAlertOrIssue (issue) {
+      issue.body = issue.body.replace(new RegExp(`\\[ \\](?= \`${this.context.repo}\`)`), '[x]');
+  
+      const unresolvedAlertCheckbox = issue.body.match(/\[ \]/);
+  
       return this.github.rest.issues.update({
           owner:        this.context.owner,
           repo:         this.issueRepo,
-          issue_number: issueNumber,
-          state:        STATES.closed,
+          issue_number: issue.number,
+          state:        !unresolvedAlertCheckbox ? STATES.closed : STATES.open,
+          body:         issue.body,
       });
+  }
+
+  needAddAlertToIssue (alert) {
+      const existIssue = this.alertDictionary[alert.security_advisory.summary];
+      return existIssue 
+          && existIssue.cveId === alert.security_advisory.cve_id
+          && existIssue.ghsaId === alert.security_advisory.ghsa_id
+          && existIssue.repo.search(`\`${this.context.repo}\``) === -1;
+  }
+
+  async addAlertToIssue (alert) {
+      const { issue } = this.alertDictionary[alert.security_advisory.summary];
+
+      const body = issue.body.replace(/(?<=Repository:)[\s\S]*?(?=####|$)/g, (match) => {
+          return match += `- [ ] \`${this.context.repo}\` - Link: ${alert.html_url}\n`;
+      });
+
+      return this.github.rest.issues.update({
+          owner:        this.context.owner,
+          repo:         this.issueRepo,
+          issue_number: issue.number,
+          body,
+      });
+
   }
 
   async createDependabotlIssues (dependabotAlerts) {
     for (const alert of dependabotAlerts) {
+          if (this.needAddAlertToIssue(alert)) {
+              await this.addAlertToIssue(alert);
+              continue;
+          }
+
           if (!this.needCreateIssue(alert))
-              return;
+              continue;
 
           await this.createIssue({
               labels:       [LABELS.dependabot, LABELS.security, alert.dependency.scope],
@@ -137,14 +178,16 @@ class SecurityChecker {
               description:  alert.security_advisory.description,
               link:         alert.html_url,
               issuePackage: alert.dependency.package.name,
+              cveId:        alert.security_advisory.cve_id,
+              ghsaId:       alert.security_advisory.ghsa_id,
           });
       }
   }
 
   async createCodeqlIssues (codeqlAlerts) {
       for (const alert of codeqlAlerts) {
-          if (!this.needCreateIssue(alert))
-              return;
+          if (!this.needCreateIssue(alert, false))
+              continue;
 
           await this.createIssue({
               labels:      [LABELS.codeql, LABELS.security],
@@ -152,23 +195,26 @@ class SecurityChecker {
               summary:     alert.rule.description,
               description: alert.most_recent_instance.message.text,
               link:        alert.html_url,
-          });
+          }, false);
       }
   }
 
-  needCreateIssue (alert) {
-      return !this.alertDictionary[alert.html_url] && Date.now() - new Date(alert.created_at) <= 1000 * 60 * 60 * 24;
+  needCreateIssue (alert, isDependabotAlert = true) {
+      const alert = isDependabotAlert ? alert.security_advisory.summary : `[${this.context.repo}] ${alert.rule.description}`;
+      return !this.alertDictionary[alert] && Date.now() - new Date(alert.created_at) <= 1000 * 60 * 60 * 24;
   }
 
-  async createIssue ({ labels, originRepo, summary, description, link, issuePackage = '' }) {
-      const title = `[${originRepo}] ${summary}`;
-      const body = ''
-                    + `#### Repository: \`${originRepo}\`\n`
+  async createIssue ({ labels, originRepo, summary, description, link, issuePackage = '', cveId, ghsaId }, isDependabotAlert = true) {
+      const title = isDependabotAlert ? `${summary}` : `[${originRepo}] ${summary}`;
+      let body = ''
+                    + `#### Repository:\n- [ ] \`${originRepo}\` - Link: ${link}\n`
                     + (issuePackage ? `#### Package: \`${issuePackage}\`\n` : '')
                     + `#### Description:\n`
-                    + `${description}\n`
-                    + `#### Link: ${link}`;
+                    + `${description}\n`;
 
+      if  (isDependabotAlert)
+        body += `\n#### CVE ID: \`${cveId}\`\n#### GHSA ID: \`${ghsaId}\``;
+  
       return this.github.rest.issues.create({
           title, body, labels,
           owner: this.context.owner,
