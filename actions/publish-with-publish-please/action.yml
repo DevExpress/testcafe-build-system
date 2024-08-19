@@ -33,4 +33,4 @@ runs:
       run: git checkout -- package-lock.json || true
 
     - shell: bash
-      run: npx publish-please || (git status && false)
+      run: npx @testcafe/publish-please || (git status && false)
