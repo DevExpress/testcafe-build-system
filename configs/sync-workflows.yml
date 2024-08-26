@@ -44,6 +44,7 @@ group:
     DevExpress/testcafe-reporter-xunit
     DevExpress/testcafe-selector-generator
     DevExpress/testcafe-studio
+    DevExpress/publish-please
   files:
     - source: workflows/
       dest: .github/workflows/
