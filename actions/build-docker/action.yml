@@ -8,7 +8,7 @@ runs:
         npx gulp docker-build
         docker save -o ${{steps.package-name.outputs.packageName}}.tar ${{steps.package-name.outputs.imageName}} 
         
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: docker
         path: ${{steps.package-name.outputs.packageName}}.tar
