@@ -6,7 +6,7 @@ runs:
     - id: detect-package-metadata
       uses: DevExpress/testcafe-build-system/actions/detect-package-metadata@main
     
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: npm
 
