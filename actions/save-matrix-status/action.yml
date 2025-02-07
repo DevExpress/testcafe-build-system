@@ -13,5 +13,5 @@ runs:
 
     - uses: actions/upload-artifact@v4
       with:
-        name: matrix-status
+        name: matrix-status-${{ inputs.job-id }}
         path: matrix-status-${{ inputs.job-id }}.txt
