@@ -32,7 +32,7 @@ on:
         default: 'critical'
         type: string
       version:
-        description: 'Version to publish'
+        description: 'Version to publish (must start with v, e.g. v1.2.3)'
         required: true
         type: string
   workflow_dispatch:
@@ -66,7 +66,7 @@ on:
         default: 'critical'
         type: string
       version:
-        description: 'Version to publish'
+        description: 'Version to publish (must start with v, e.g. v1.2.3)'
         required: true
         type: string
 
@@ -76,27 +76,48 @@ permissions:
 jobs:
   npm-publish:
     runs-on: ubuntu-latest
-    environment: npmjs
     steps:
-      - uses: actions/checkout@v6
+      - id: checkout
+        uses: actions/checkout@v6
         with:
           ref: ${{ inputs.branch }}
-      - run: git fetch --force --tags
+      - id: fetch_tags
+        run: git fetch --force --tags
 
       - name: Get tag on current commit
         id: latest_tag
         run: echo "value=$(git tag --points-at HEAD | head -n 1)" >> $GITHUB_OUTPUT
 
+      - name: Normalize input version
+        id: input_version
+        run: |
+          RAW_VERSION="${{ inputs.version }}"
+          NORMALIZED_VERSION="${RAW_VERSION#v}"
+          echo "raw=$RAW_VERSION" >> "$GITHUB_OUTPUT"
+          echo "value=$NORMALIZED_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Validate version input format
+        id: validate_version_format
+        if: ${{ !startsWith(inputs.version, 'v') }}
+        run: |
+          echo "Error: version input must start with 'v' (for example: v1.2.3). Received: ${{ inputs.version }}"
+          echo "❌ Error: version input must start with 'v' (for example: v1.2.3). Received: ${{ inputs.version }}" >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+
       - name: Check if latest tag exists
+        id: check_latest_tag_exists
         if: ${{ !steps.latest_tag.outputs.value }}
         run: |
           echo "Error: No tag found for the current commit."
+          echo "❌ Error: No tag found for the current commit." >> "$GITHUB_STEP_SUMMARY"
           exit 1
 
       - name: Check latest tag matches version
+        id: check_latest_tag_matches_version
         if: ${{ steps.latest_tag.outputs.value != inputs.version }}
         run: |
-          echo "Error: Latest tag ${{ steps.latest_tag.outputs.value }} does not match the version ${{ inputs.version }}"
+          echo "Error: Latest tag ${{ steps.latest_tag.outputs.value }} does not match the expected tag for version ${{ inputs.version }}"
+          echo "❌ Error: Latest tag ${{ steps.latest_tag.outputs.value }} does not match the expected tag for version ${{ inputs.version }}" >> "$GITHUB_STEP_SUMMARY"
           exit 1
 
       - name: Get package.json version
@@ -106,31 +127,75 @@ jobs:
           echo "value=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Check package.json version
-        if: ${{ steps.package_version.outputs.value != inputs.version }}
+        id: check_package_version
+        if: ${{ steps.package_version.outputs.value != steps.input_version.outputs.value }}
         run: |
-          echo "Error: package.json version ${{ steps.package_version.outputs.value }} does not match the version ${{ inputs.version }}"
+          echo "Error: package.json version ${{ steps.package_version.outputs.value }} does not match normalized version ${{ steps.input_version.outputs.value }} (from input ${{ inputs.version }})"
+          echo "❌ Error: package.json version ${{ steps.package_version.outputs.value }} does not match normalized version ${{ steps.input_version.outputs.value }} (from input ${{ inputs.version }})" >> "$GITHUB_STEP_SUMMARY"
           exit 1
 
-      - uses: actions/setup-node@v6
+      - id: setup_node
+        uses: actions/setup-node@v6
         with:
           node-version: latest
           registry-url: 'https://registry.npmjs.org'
 
       - name: Check for vulnerable dependencies
+        id: npm_audit
         run: npm audit --omit=dev --audit-level=${{ inputs.audit-level }}
 
       - name: Install dependencies
+        id: npm_ci
         run: npm ci
 
       - name: Running pre-publish script
+        id: pre_publish_script
         if: ${{ inputs.pre-publish-script }}
         run: ${{ inputs.pre-publish-script }}
 
       - name: Publish package
+        id: publish_package
         run: ${{ inputs.publish-command }} --tag ${{ inputs.publish-tag }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Running post-publish script
+        id: post_publish_script
         if: ${{ inputs.post-publish-script }}
         run: ${{ inputs.post-publish-script }}
+
+      - name: Publish summary
+        if: ${{ always() }}
+        run: |
+          {
+            echo "## Publish workflow summary"
+            echo ""
+            echo "- Job status: **${{ job.status }}**"
+            echo "- Input version: \`${{ inputs.version }}\`"
+            echo "- Normalized version: \`${{ steps.input_version.outputs.value }}\`"
+            echo "- Branch: \`${{ inputs.branch }}\`"
+            echo "- Publish tag: \`${{ inputs.publish-tag }}\`"
+            echo ""
+            echo "### Failed checks"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          FAILED=0
+
+          add_failure() {
+            echo "- ❌ $1" >> "$GITHUB_STEP_SUMMARY"
+            FAILED=1
+          }
+
+          [ "${{ steps.validate_version_format.outcome }}" = "failure" ] && add_failure "Version input format validation failed (must start with 'v')."
+          [ "${{ steps.check_latest_tag_exists.outcome }}" = "failure" ] && add_failure "No git tag found on the checked-out commit."
+          [ "${{ steps.check_latest_tag_matches_version.outcome }}" = "failure" ] && add_failure "Current commit tag does not match provided version input."
+          [ "${{ steps.check_package_version.outcome }}" = "failure" ] && add_failure "package.json version does not match normalized version input."
+          [ "${{ steps.npm_audit.outcome }}" = "failure" ] && add_failure "npm audit failed for the configured audit level."
+          [ "${{ steps.npm_ci.outcome }}" = "failure" ] && add_failure "npm ci failed."
+          [ "${{ steps.pre_publish_script.outcome }}" = "failure" ] && add_failure "Pre-publish script failed."
+          [ "${{ steps.publish_package.outcome }}" = "failure" ] && add_failure "npm publish command failed."
+          [ "${{ steps.post_publish_script.outcome }}" = "failure" ] && add_failure "Post-publish script failed."
+
+          if [ "$FAILED" -eq 1 ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+          fi
