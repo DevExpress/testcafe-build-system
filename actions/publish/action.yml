@@ -1,0 +1,136 @@
+name: Publish
+
+on:
+  workflow_call:
+    inputs:
+      pre-publish-script:
+        description: 'Script that runs before publishing'
+        required: false
+        type: string
+      post-publish-script:
+        description: 'Script that runs after publishing'
+        required: false
+        type: string
+      publish-command:
+        description: 'Command used to publish the package'
+        required: false
+        default: 'npm publish'
+        type: string
+      publish-tag:
+        description: 'NPM dist-tag used when publishing'
+        required: false
+        default: 'latest'
+        type: string
+      branch:
+         description: 'Branch to publish from'
+         required: false
+         default: 'master'
+         type: string
+      audit-level:
+        description: 'The level of vulnerabilities to fail on (low, moderate, high, critical)'
+        required: false
+        default: 'critical'
+        type: string
+      version:
+        description: 'Version to publish'
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      pre-publish-script:
+        description: 'Script that runs before publishing'
+        required: false
+        type: string
+      post-publish-script:
+        description: 'Script that runs after publishing'
+        required: false
+        type: string
+      publish-command:
+        description: 'Command used to publish the package'
+        required: false
+        default: 'npm publish'
+        type: string
+      publish-tag:
+        description: 'NPM dist-tag used when publishing'
+        required: false
+        default: 'latest'
+        type: string
+      branch:
+         description: 'Branch to publish from'
+         required: false
+         default: 'master'
+         type: string
+      audit-level:
+        description: 'The level of vulnerabilities to fail on (low, moderate, high, critical)'
+        required: false
+        default: 'critical'
+        type: string
+      version:
+        description: 'Version to publish'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  npm-publish:
+    runs-on: ubuntu-latest
+    environment: npmjs
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.branch }}
+      - run: git fetch --force --tags
+
+      - name: Get tag on current commit
+        id: latest_tag
+        run: echo "value=$(git tag --points-at HEAD | head -n 1)" >> $GITHUB_OUTPUT
+
+      - name: Check if latest tag exists
+        if: ${{ !steps.latest_tag.outputs.value }}
+        run: |
+          echo "Error: No tag found for the current commit."
+          exit 1
+
+      - name: Check latest tag matches version
+        if: ${{ steps.latest_tag.outputs.value != inputs.version }}
+        run: |
+          echo "Error: Latest tag ${{ steps.latest_tag.outputs.value }} does not match the version ${{ inputs.version }}"
+          exit 1
+
+      - name: Get package.json version
+        id: package_version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "value=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Check package.json version
+        if: ${{ steps.package_version.outputs.value != inputs.version }}
+        run: |
+          echo "Error: package.json version ${{ steps.package_version.outputs.value }} does not match the version ${{ inputs.version }}"
+          exit 1
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: latest
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Check for vulnerable dependencies
+        run: npm audit --omit=dev --audit-level=${{ inputs.audit-level }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Running pre-publish script
+        if: ${{ inputs.pre-publish-script }}
+        run: ${{ inputs.pre-publish-script }}
+
+      - name: Publish package
+        run: ${{ inputs.publish-command }} --tag ${{ inputs.publish-tag }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Running post-publish script
+        if: ${{ inputs.post-publish-script }}
+        run: ${{ inputs.post-publish-script }}
