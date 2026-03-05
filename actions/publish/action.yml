@@ -72,10 +72,12 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   npm-publish:
     runs-on: ubuntu-latest
+    environment: npmjs
     steps:
       - id: checkout
         uses: actions/checkout@v6
@@ -175,6 +177,7 @@ jobs:
             echo "- Normalized version: \`${{ steps.input_version.outputs.value }}\`"
             echo "- Branch: \`${{ inputs.branch }}\`"
             echo "- Publish tag: \`${{ inputs.publish-tag }}\`"
+            echo "- Publish step outcome: \`${{ steps.publish_package.outcome }}\`"
             echo ""
             echo "### Failed checks"
           } >> "$GITHUB_STEP_SUMMARY"
@@ -193,7 +196,7 @@ jobs:
           [ "${{ steps.npm_audit.outcome }}" = "failure" ] && add_failure "npm audit failed for the configured audit level."
           [ "${{ steps.npm_ci.outcome }}" = "failure" ] && add_failure "npm ci failed."
           [ "${{ steps.pre_publish_script.outcome }}" = "failure" ] && add_failure "Pre-publish script failed."
-          [ "${{ steps.publish_package.outcome }}" = "failure" ] && add_failure "npm publish command failed."
+          [ "${{ steps.publish_package.outcome }}" = "failure" ] && add_failure "Publish step failed."
           [ "${{ steps.post_publish_script.outcome }}" = "failure" ] && add_failure "Post-publish script failed."
 
           if [ "$FAILED" -eq 1 ]; then
