@@ -31,6 +31,11 @@ on:
         required: false
         default: 'low'
         type: string
+      omit-dev-dependencies:
+        description: 'Whether to skip devDependencies in npm audit'
+        required: false
+        default: false
+        type: boolean
       version:
         description: 'Version to publish (must start with v, e.g. v1.2.3)'
         required: true
@@ -65,6 +70,11 @@ on:
         required: false
         default: 'low'
         type: string
+      omit-dev-dependencies:
+        description: 'Whether to skip devDependencies in npm audit'
+        required: false
+        default: false
+        type: boolean
       version:
         description: 'Version to publish (must start with v, e.g. v1.2.3)'
         required: true
@@ -144,7 +154,7 @@ jobs:
 
       - name: Check for vulnerable dependencies
         id: npm_audit
-        run: npm audit --omit=dev --audit-level=${{ inputs.audit-level }}
+        run: npm audit ${{ inputs.omit-dev-dependencies && '--omit=dev' || '' }} --audit-level=${{ inputs.audit-level }}
 
       - name: Install dependencies
         id: npm_ci
