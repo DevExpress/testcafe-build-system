@@ -29,7 +29,7 @@ on:
       audit-level:
         description: 'The level of vulnerabilities to fail on (low, moderate, high, critical)'
         required: false
-        default: 'critical'
+        default: 'low'
         type: string
       version:
         description: 'Version to publish (must start with v, e.g. v1.2.3)'
@@ -63,7 +63,7 @@ on:
       audit-level:
         description: 'The level of vulnerabilities to fail on (low, moderate, high, critical)'
         required: false
-        default: 'critical'
+        default: 'low'
         type: string
       version:
         description: 'Version to publish (must start with v, e.g. v1.2.3)'
