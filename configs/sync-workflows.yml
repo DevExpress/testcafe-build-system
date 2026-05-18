@@ -12,7 +12,6 @@ group:
     DevExpress/gulp-ll-next
     DevExpress/gulp-mocha-simple
     DevExpress/gulp-step
-    DevExpress/hammerhead-health-monitor
     DevExpress/is-jquery-obj
     DevExpress/linux-platform-info
     DevExpress/log-update-async-hook
