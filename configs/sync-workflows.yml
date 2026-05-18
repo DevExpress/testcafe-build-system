@@ -10,13 +10,11 @@ group:
     DevExpress/generator-testcafe-browser-provider
     DevExpress/generator-testcafe-reporter
     DevExpress/gulp-ll-next
-    DevExpress/gulp-mocha-simple
     DevExpress/gulp-step
     DevExpress/is-jquery-obj
     DevExpress/linux-platform-info
     DevExpress/log-update-async-hook
     DevExpress/match-url-wildcard
-    DevExpress/mocha-reporter-spec-with-retries
     DevExpress/moment-duration-format-commonjs
     DevExpress/npm-auditor
     DevExpress/saucelabs-connector
@@ -43,7 +41,6 @@ group:
     DevExpress/testcafe-reporter-xunit
     DevExpress/testcafe-selector-generator
     DevExpress/testcafe-studio
-    DevExpress/publish-please
   files:
     - source: workflows/
       dest: .github/workflows/
